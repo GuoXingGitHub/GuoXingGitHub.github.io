@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>c语言10-字符串和命名空间 | 阿兴的博客</title>
+  <meta name="description" content="c语言里面的字符串理解:1:因为c语言中没有字符串类型，所以只能用char类型的数组来代替，          2:在编译阶段，系统会将字符串编译加载到data空间的只读区域，以字符数组的方式存放，并且字符串就相当于是数组名（字符串元素的首地址）【常量不能修改】          3:注意:字符串的首地址是个常量，不能修改和移动的，因为如果修改了首地址的话，后面的其他元素也就找不到了，如果我们要修">
+<meta name="keywords" content="c语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言10-字符串和命名空间">
+<meta property="og:url" content="https://1069784176.github.io/2018/03/12/2015-03-09-c语言10-字符串和命名空间/index.html">
+<meta property="og:site_name" content="阿兴的博客">
+<meta property="og:description" content="c语言里面的字符串理解:1:因为c语言中没有字符串类型，所以只能用char类型的数组来代替，          2:在编译阶段，系统会将字符串编译加载到data空间的只读区域，以字符数组的方式存放，并且字符串就相当于是数组名（字符串元素的首地址）【常量不能修改】          3:注意:字符串的首地址是个常量，不能修改和移动的，因为如果修改了首地址的话，后面的其他元素也就找不到了，如果我们要修">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://1069784176.github.io/2018/03/12/2015-03-09-c语言10-字符串和命名空间/数组指针传递以及二级指针接收的流程概括.png">
+<meta property="og:updated_time" content="2018-03-11T16:41:10.291Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言10-字符串和命名空间">
+<meta name="twitter:description" content="c语言里面的字符串理解:1:因为c语言中没有字符串类型，所以只能用char类型的数组来代替，          2:在编译阶段，系统会将字符串编译加载到data空间的只读区域，以字符数组的方式存放，并且字符串就相当于是数组名（字符串元素的首地址）【常量不能修改】          3:注意:字符串的首地址是个常量，不能修改和移动的，因为如果修改了首地址的话，后面的其他元素也就找不到了，如果我们要修">
+<meta name="twitter:image" content="https://1069784176.github.io/2018/03/12/2015-03-09-c语言10-字符串和命名空间/数组指针传递以及二级指针接收的流程概括.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://1069784176.github.io/2018/03/12/2015-03-09-c语言10-字符串和命名空间/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="阿兴的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <!-- font-awesome CSS -->
+  <!-- <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+    
+    
+
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/GuoXingGitHub" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">阿兴</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">程序开发</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Guangzhou, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav">
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于/留言</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/GuoXingGitHub" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            
+            <p>您好，您是第<span id="busuanzi_value_site_uv">0</span>位访客</p>
+            
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">17</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/csharp/">csharp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c语言/">c语言</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/">windows</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具-插件/">工具/插件</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/c/" style="font-size: 13px;">c++</a> <a href="/tags/csharp/" style="font-size: 13px;">csharp</a> <a href="/tags/c语言/" style="font-size: 14px;">c语言</a> <a href="/tags/linux/" style="font-size: 13px;">linux</a> <a href="/tags/windows/" style="font-size: 13px;">windows</a> <a href="/tags/工具-插件/" style="font-size: 13.5px;">工具/插件</a> <a href="/tags/虚拟机/" style="font-size: 13px;">虚拟机</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a><span class="archive-list-count">6</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/技术/">技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/03/12/2015-03-09-c语言11-进程空间-结构/" class="title">c语言11-进程空间,结构</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-03-11T16:16:12.000Z" itemprop="datePublished">2018-03-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/技术/">技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/03/12/2015-03-09-c语言10-字符串和命名空间/" class="title">c语言10-字符串和命名空间</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-03-11T16:04:29.000Z" itemprop="datePublished">2018-03-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/技术/">技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/03/11/2015-03-09-c语言9-变量作用域及修饰符/" class="title">c语言9-变量作用域及修饰符</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-03-11T15:41:56.000Z" itemprop="datePublished">2018-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/技术/">技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/03/11/2015-03-09-c语言4-程序的设计结构/" class="title">c语言4-程序的设计结构</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-03-11T15:41:56.000Z" itemprop="datePublished">2018-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/技术/">技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/03/11/2015-03-09-c语言8-函数/" class="title">c语言8-函数</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-03-11T15:41:56.000Z" itemprop="datePublished">2018-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-2015-03-09-c语言10-字符串和命名空间" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      c语言10-字符串和命名空间
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/03/12/2015-03-09-c语言10-字符串和命名空间/" class="article-date">
+	  <time datetime="2018-03-11T16:04:29.000Z" itemprop="datePublished">2018-03-12</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/c语言/">c语言</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/03/12/2015-03-09-c语言10-字符串和命名空间/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry markdown-body" itemprop="articleBody">
+      
+        <h2 id="c语言里面的字符串"><a href="#c语言里面的字符串" class="headerlink" title="c语言里面的字符串"></a>c语言里面的字符串</h2><p>理解:1:因为c语言中没有字符串类型，所以只能用char类型的数组来代替，<br>          2:在编译阶段，系统会将字符串编译加载到data空间的只读区域，以字符数组的方式存放，并且字符串就相当于是数组名（字符串元素的首地址）【常量不能修改】<br>          3:注意:字符串的首地址是个常量，不能修改和移动的，因为如果修改了首地址的话，后面的其他元素也就找不到了，如果我们要修改的化，可以将首元素的地址复制到一个新的char*类型变量中，然后根据这个新的指针变量来进行修改操作<br>          4:一串字符的结束标识是’\0’ascii码为0，我们正常输入的字符的ascii码范围为32~127，我们常用这个作为验证字符串是否结束<br>          5:没有’\0’的字符串不能称为字符串，只能称作字符数组<br>          6:用char数组来申明字符串的时候，我们可以利用数组可以省阅长度的特点来申明变量<br>          7:c语言中对字符串进行排序是先比较长度，如果长度相同再将其转换为ascii码单个字符进行比较的，所以strmp就是这样实现的</p>
+<p>c语言中常用的字符串标准库函数:头文件string.h<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gets:可以获取到屏幕中的字符串，在遇到回车才会停止，遇到空格也会加载（<span class="built_in">scanf</span>遇到空格会结束自动加上\<span class="number">0</span>）</span><br><span class="line"><span class="built_in">puts</span>:往屏幕追加字符</span><br><span class="line"><span class="built_in">strlen</span>（求字符串长度）:<span class="keyword">size_t</span> <span class="built_in">strlen</span> ( <span class="keyword">const</span> <span class="keyword">char</span> * str );</span><br><span class="line"><span class="built_in">strcat</span>（将两个字符串叠加）:<span class="function"><span class="keyword">char</span> * <span class="title">strcat</span> <span class="params">( <span class="keyword">char</span> * dest, <span class="keyword">const</span> <span class="keyword">char</span> * src )</span></span>;</span><br><span class="line"><span class="built_in">strcpy</span>（将字符串完全复制到一个新的字符数组中）:<span class="function"><span class="keyword">char</span> * <span class="title">strcpy</span> <span class="params">( <span class="keyword">char</span> * dest, <span class="keyword">const</span> <span class="keyword">char</span> * src )</span></span>;</span><br><span class="line"><span class="built_in">strcmp</span>（比较两个字符串的大小）:<span class="function"><span class="keyword">int</span> <span class="title">strcmp</span> <span class="params">( <span class="keyword">const</span> <span class="keyword">char</span> * str1, <span class="keyword">const</span> <span class="keyword">char</span> * str2 )</span></span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="多文件编程"><a href="#多文件编程" class="headerlink" title="多文件编程"></a>多文件编程</h2><p>注意:我们需要在头文件加上#ifndefCP_H #defineCP_H  #endif//CP_H  的作用是防止头文件冲突</p>
+<h2 id="指针数组"><a href="#指针数组" class="headerlink" title="指针数组"></a>指针数组</h2><p>理解:指针数组的本质就是数组，只不过里面存储的是指针（字符数组名），当我们要传递指针数组时，形参和实参的类型应该为二级指针</p>
+<h2 id="内存空间"><a href="#内存空间" class="headerlink" title="内存空间"></a>内存空间</h2><p>理解:1:我们说的内存空间不是我们说的内存条，而是虚拟内存（总的内存=系统内核空间+用户空间）的用户空间部分<br>          2:我们开发中常用的两部分内存，栈空间和堆空间:栈空间:自上向下发展，先申请的为高位，后申请的为低位<br>3:我们每运行一个程序都会开辟一个新的进程空间，每个进程空间现在可以理解为独立的<br>特点:随用随开，用完即销；堆空间:自下向上发展:先申请的为低位，后申请的为高位，对于栈来说，无限大，但在实际开发中，受限于是否连续空间<br>c语言中申请内存空间的函数:头文件  stdlib.h<br>特点:申请的都是堆空间<br>注意:每次申请都要记得释放<br>malloc:void <em> malloc(size_t _Size);<br>calloc:void </em>calloc(size_t nmemb, size_t size);:开辟nmemb个size大小的空间<br>realloc:void <em>realloc(void </em>ptr, size_t size); :根据原有空间来扩容，先直接在原有空间后面找，看是否有size大小的空间，如果有就直接创建，如果没有，会去其他地方找，找到后会将原空间的内容复制进去，并且返回新的地址<br>free:void free(void *p);</p>
+<h2 id="数组指针传递以及二级指针接收的流程概括"><a href="#数组指针传递以及二级指针接收的流程概括" class="headerlink" title="数组指针传递以及二级指针接收的流程概括"></a>数组指针传递以及二级指针接收的流程概括</h2><p><img src="/2018/03/12/2015-03-09-c语言10-字符串和命名空间/数组指针传递以及二级指针接收的流程概括.png" alt="数组指针传递以及二级指针接收的流程概括"></p>
+<h2 id="自实现c语言常用字符函数"><a href="#自实现c语言常用字符函数" class="headerlink" title="自实现c语言常用字符函数"></a>自实现c语言常用字符函数</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1:myStrlen:</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myStrLen</span><span class="params">( <span class="keyword">char</span>*str1 )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span> (*str1++) <span class="comment">/* 验证完了再加加如果符合才进 */</span></span><br><span class="line">	&#123;</span><br><span class="line">		num++;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>( <span class="string">"%d\n"</span>, num );</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//2:myStrCat:</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myStrCat</span><span class="params">( <span class="keyword">char</span>*str1, <span class="keyword">char</span>*str2 )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">/* 首先将首空间的地址储存 */</span></span><br><span class="line">	<span class="keyword">char</span>*newStr = str1;</span><br><span class="line"><span class="comment">/* 将首空间的地址移动到空间的最后 */</span></span><br><span class="line">	<span class="keyword">for</span> (; *str1; str1++ );</span><br><span class="line"><span class="comment">/* 将要追加的内容进行追加 */</span></span><br><span class="line">	<span class="keyword">for</span> (; *str1 = *str2; str1++, str2++ );</span><br><span class="line">	<span class="built_in">printf</span>( <span class="string">"%s"</span>, newStr );</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//3:myStrCmp</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">myStrCmp</span><span class="params">( <span class="keyword">char</span>*str1, intnum1, <span class="keyword">char</span>*str2, intnum2 )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(num1&gt;num2)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(num1 &lt; num2 )</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span>(<span class="number">-1</span>);</span><br><span class="line">	&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> ( *str1 &gt; *str2 )</span><br><span class="line">				return1;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span>( *str1 == *str2 &amp;&amp; *str1 == <span class="string">'\0'</span> &amp;&amp; *str2 == <span class="string">'\0'</span> )</span><br><span class="line">			    return0;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span>( *str1 &lt; *str2 )</span><br><span class="line">			    <span class="keyword">return</span>(<span class="number">-1</span>);</span><br><span class="line">			str1++; str2++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//4:myStrCopy:</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myStrCpy</span><span class="params">( <span class="keyword">char</span>*str1, <span class="keyword">char</span>*str2 )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> * newStr = str2;</span><br><span class="line">	<span class="keyword">for</span> (;*str2 = *str1; str1++, str2++ );</span><br><span class="line">	<span class="built_in">printf</span>( <span class="string">"%s\n"</span>, newStr );</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//5:对字 符 串 数组进行排序:</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myStrSort</span><span class="params">( <span class="keyword">char</span>**str1, intnum )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> ( inti = <span class="number">0</span>; i &lt; num; i++ )</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span> ( intj = <span class="number">0</span>; j &lt; num - i - <span class="number">1</span>; j++ )</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> ( <span class="built_in">strcmp</span>( *(str1 + j), *(str1 + j + <span class="number">1</span>) ) &gt; <span class="number">0</span> )</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">char</span>*temp = *(str1 + j);</span><br><span class="line">				*(str1 + j)	= *(str1 + j + <span class="number">1</span>);</span><br><span class="line">				*(str1 + j + <span class="number">1</span>) = *(str1 + j);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> ( inti = <span class="number">0</span>; i &lt; num; i++ )</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%s\n"</span>, *(str1 + i));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://1069784176.github.io/2018/03/12/2015-03-09-c语言10-字符串和命名空间/" title="c语言10-字符串和命名空间" target="_blank" rel="external">https://1069784176.github.io/2018/03/12/2015-03-09-c语言10-字符串和命名空间/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/GuoXingGitHub" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/GuoXingGitHub" target="_blank"><span class="text-dark">阿兴</span><small class="ml-1x">程序开发</small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+       
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNDY2OC8xMTIwNQ==">
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+      
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/03/12/2015-03-09-c语言11-进程空间-结构/" title="c语言11-进程空间,结构"><i class="icon icon-angle-left" aria-hidden="true"></i>&nbsp;&nbsp;上一篇</a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/03/11/2015-03-09-c语言9-变量作用域及修饰符/" title="c语言9-变量作用域及修饰符">下一篇&nbsp;&nbsp;<i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning hidden-xs" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="wechat,qq,qzone"></div>
+    
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-tit">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="donate-payimg">
+            <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+          </div>
+          <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+          <div class="donate-payselect">
+            <div class="pay_item checked" data-id="alipay" data-src="/images/donate/alipayimg.png">
+              <div class="radio">
+                <input type="radio" name="payment" id="input-alipay" value="alipay" checked>
+                <label class="pay_logo clickable" for="input-alipay"><img src="/images/donate/alipay.jpg" alt="支付宝" /></label>
+              </div>
+            </div>
+            <div class="pay_item" data-id="weipay" data-src="/images/donate/weipayimg.png">
+              <div class="radio">
+                <input type="radio" name="payment" id="input-weipay" value="weipay">
+                <label class="pay_logo clickable" for="input-weipay"><img src="/images/donate/weipay.jpg" alt="微信支付" /></label>
+              </div>
+            </div>
+          </div>
+          <div class="text-grey">
+            <p>扫一扫，即可进行扫码打赏哦</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/GuoXingGitHub" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+  
+    
+    
+    
+        <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+    
+    
+    
+        
+<script defer src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+        
+    
+<script defer type="text/javascript">
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+
+    if (typeof LivereTower === 'function') { return; }
+
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+
+    
+    
+
+
+
+</body>
+</html>

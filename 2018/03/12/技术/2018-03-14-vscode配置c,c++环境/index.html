@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>vscode配置c,c++环境 | 阿兴的博客</title>
+  <meta name="description" content="前言 官网教程: C/C++ for VS Code (Preview) 参考教程: Visual Studio Code如何编写运行C、C++  安装ide和编译器,调试器的安装vscode官网Clang下载,选Pre-Built Binaries中的Clang for Windows (64-bit),不需要下.sig文件MinGW-w64下载,直接Download Clang 下载好了以后安">
+<meta name="keywords" content="c语言,工具&#x2F;插件,c++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vscode配置c,c++环境">
+<meta property="og:url" content="http://axss.gitee.io/2018/03/12/技术/2018-03-14-vscode配置c,c++环境/index.html">
+<meta property="og:site_name" content="阿兴的博客">
+<meta property="og:description" content="前言 官网教程: C/C++ for VS Code (Preview) 参考教程: Visual Studio Code如何编写运行C、C++  安装ide和编译器,调试器的安装vscode官网Clang下载,选Pre-Built Binaries中的Clang for Windows (64-bit),不需要下.sig文件MinGW-w64下载,直接Download Clang 下载好了以后安">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-14T13:03:56.972Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vscode配置c,c++环境">
+<meta name="twitter:description" content="前言 官网教程: C/C++ for VS Code (Preview) 参考教程: Visual Studio Code如何编写运行C、C++  安装ide和编译器,调试器的安装vscode官网Clang下载,选Pre-Built Binaries中的Clang for Windows (64-bit),不需要下.sig文件MinGW-w64下载,直接Download Clang 下载好了以后安">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://axss.gitee.io/2018/03/12/技术/2018-03-14-vscode配置c,c++环境/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="阿兴的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <!-- font-awesome CSS -->
+  <!-- <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+    
+    
+
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/GuoXingGitHub" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">阿兴</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">程序开发</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Guangzhou, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav">
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-musics">
+          <a href="/musics">
+            
+            <i class="icon icon-zcool"></i>
+            
+            <span class="menu-title">音乐</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于/留言</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/GuoXingGitHub" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            
+            <p>您好，您是第<span id="busuanzi_value_site_uv">0</span>位访客</p>
+            
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">35</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/net/">.net</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c++</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/csharp/">csharp</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c语言/">c语言</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web前端/">web前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/">windows</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具-插件/">工具/插件</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活随笔/">生活随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/net/" style="font-size: 13px;">.net</a> <a href="/tags/c/" style="font-size: 13.4px;">c++</a> <a href="/tags/csharp/" style="font-size: 13.6px;">csharp</a> <a href="/tags/c语言/" style="font-size: 14px;">c语言</a> <a href="/tags/linux/" style="font-size: 13px;">linux</a> <a href="/tags/python/" style="font-size: 13.2px;">python</a> <a href="/tags/web前端/" style="font-size: 13px;">web前端</a> <a href="/tags/windows/" style="font-size: 13px;">windows</a> <a href="/tags/工具-插件/" style="font-size: 13.8px;">工具/插件</a> <a href="/tags/生活随笔/" style="font-size: 13px;">生活随笔</a> <a href="/tags/虚拟机/" style="font-size: 13px;">虚拟机</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a><span class="archive-list-count">6</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/技术/">技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/03/14/技术/2018-03-14-VS插件VASSISTX(小番茄)创建注释模板/" class="title">VS插件VASSISTX(小番茄)创建注释模板</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-03-14T07:00:42.000Z" itemprop="datePublished">2018-03-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/技术/">技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/03/12/技术/2018-03-09-python编写规范pep8的问题笔记/" class="title">python编写规范pep8的问题笔记</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-03-12T12:46:25.000Z" itemprop="datePublished">2018-03-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/生活/">生活</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/03/12/生活/2018-03-10-图片/" class="title">图片</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-03-12T08:40:41.000Z" itemprop="datePublished">2018-03-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/技术/">技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/03/12/技术/2018-03-10-csharp学习笔记/" class="title">C#学习笔记.exe下载</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-03-12T07:09:23.000Z" itemprop="datePublished">2018-03-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/技术/">技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/03/12/技术/2018-03-10-csharp代码的编译过程/" class="title">C#代码的编译过程</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-03-12T07:04:49.000Z" itemprop="datePublished">2018-03-12</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-技术/2018-03-14-vscode配置c,c++环境" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      vscode配置c,c++环境
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/03/12/技术/2018-03-14-vscode配置c,c++环境/" class="article-date">
+	  <time datetime="2018-03-12T07:00:42.000Z" itemprop="datePublished">2018-03-12</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/c/">c++</a>, <a class="article-tag-link" href="/tags/c语言/">c语言</a>, <a class="article-tag-link" href="/tags/工具-插件/">工具/插件</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/03/12/技术/2018-03-14-vscode配置c,c++环境/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry markdown-body" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ol>
+<li>官网教程: <a href="https://code.visualstudio.com/docs/languages/cpp" target="_blank" rel="noopener">C/C++ for VS Code (Preview)</a></li>
+<li>参考教程: <a href="https://www.zhihu.com/question/30315894" target="_blank" rel="noopener">Visual Studio Code如何编写运行C、C++</a></li>
+</ol>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="ide和编译器-调试器的安装"><a href="#ide和编译器-调试器的安装" class="headerlink" title="ide和编译器,调试器的安装"></a>ide和编译器,调试器的安装</h3><p><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">vscode官网</a><br><a href="http://releases.llvm.org/download.html" target="_blank" rel="noopener">Clang下载</a>,选Pre-Built Binaries中的Clang for Windows (64-bit),不需要下.sig文件<br><a href="https://sourceforge.net/projects/mingw-w64/" target="_blank" rel="noopener">MinGW-w64下载</a>,直接Download</p>
+<p>Clang 下载好了以后安装。添加环境变量时：选Add LLVM to the system PATH for all users（即第二项，不过第三项也差不多）。Clang的安装路径（Destination folder）我推荐填C:\LLVM，不装那里也行，下面的配置里路径就自己改。安装完了以后可能会弹出cmd说MSVC integration install failed。这个是因为Clang默认使用的是msvc的工具链，而我们选择的工具链是MinGW，所以就不用管这个提示。如果你想用别的工具链，参考第九点。</p>
+<p>MinGW随便装哪，Architecture选x86_64，装好以后把东西全部复制到Clang的文件夹里去，他们会无冲突合并，效果图见下。同样，不做这一步也行，下面的配置里路径就自己改，还要手动把MinGW的bin文件夹加到path中，因为MinGW不会自己加。至于为什么既要装Clang又要装MinGW，是因为Clang没有头文件。然后就可以把MinGW删了（Uninstall.exe）。不建议安装多个MinGW；可以把其他轻量IDE的编译器设为Clang，并把其他的MinGW从环境变量中去掉。</p>
+<h3 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h3><p>C/C++（就是有些教程里的cpptools）<br>C/C++ Clang Command Adapter：提供静态检测（Lint）<br>Code Runner<br>Include Autocomplete：提供头文件补全<br>C/C++ Snippets：Snippets即重用代码块</p>
+<h3 id="可选插件"><a href="#可选插件" class="headerlink" title="可选插件"></a>可选插件</h3><p>Bracket Pair Colorizer：彩虹花括号<br>One Dark Pro：大概是VS Code安装量最高的主题<br>GBKtoUTF8：把GBK编码的文档转换成UTF8编码的</p>
+<h2 id="配置-vscode-的-四个json文件"><a href="#配置-vscode-的-四个json文件" class="headerlink" title="配置.vscode 的 四个json文件"></a>配置.vscode 的 四个json文件</h2><h3 id="c-cpp-properties-json"><a href="#c-cpp-properties-json" class="headerlink" title="c_cpp_properties.json"></a>c_cpp_properties.json</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"configurations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"name"</span>: <span class="string">"Win32"</span>,</span><br><span class="line">            <span class="attr">"intelliSenseMode"</span>: <span class="string">"clang-x64"</span>,</span><br><span class="line">            <span class="attr">"includePath"</span>: [</span><br><span class="line">                <span class="string">"$&#123;workspaceFolder&#125;"</span>,</span><br><span class="line">                <span class="string">"D:/Program Files/llvm/lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++"</span>,</span><br><span class="line">                <span class="string">"D:/Program Files/llvm/lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/x86_64-w64-mingw32"</span>,</span><br><span class="line">                <span class="string">"D:/Program Files/llvm/lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/backward"</span>,</span><br><span class="line">                <span class="string">"D:/Program Files/llvm/lib/gcc/x86_64-w64-mingw32/7.2.0/include"</span>,</span><br><span class="line">                <span class="string">"D:/Program Files/llvm/include"</span>,</span><br><span class="line">                <span class="string">"D:/Program Files/llvm/x86_64-w64-mingw32/include"</span>,</span><br><span class="line">                <span class="string">"D:/Program Files/llvm/lib/gcc/x86_64-w64-mingw32/7.2.0/include-fixed"</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">"defines"</span>: [</span><br><span class="line">                <span class="string">"_DEBUG"</span>,</span><br><span class="line">                <span class="string">"UNICODE"</span>,</span><br><span class="line">                <span class="string">"__GNUC__=7"</span>,</span><br><span class="line">                <span class="string">"__cdecl=__attribute__((__cdecl__))"</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">"browse"</span>: &#123;</span><br><span class="line">                <span class="attr">"path"</span>: [</span><br><span class="line">                    <span class="string">"$&#123;workspaceFolder&#125;"</span>,</span><br><span class="line">                    <span class="string">"D:/Program Files/llvm/lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++"</span>,</span><br><span class="line">                    <span class="string">"D:/Program Files/llvm/lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/x86_64-w64-mingw32"</span>,</span><br><span class="line">                    <span class="string">"D:/Program Files/llvm/lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/backward"</span>,</span><br><span class="line">                    <span class="string">"D:/Program Files/llvm/lib/gcc/x86_64-w64-mingw32/7.2.0/include"</span>,</span><br><span class="line">                    <span class="string">"D:/Program Files/llvm/include"</span>,</span><br><span class="line">                    <span class="string">"D:/Program Files/llvm/x86_64-w64-mingw32/include"</span>,</span><br><span class="line">                    <span class="string">"D:/Program Files/llvm/lib/gcc/x86_64-w64-mingw32/7.2.0/include-fixed"</span></span><br><span class="line">                ],</span><br><span class="line">                <span class="attr">"limitSymbolsToIncludedHeaders"</span>: <span class="literal">true</span>,</span><br><span class="line">                <span class="attr">"databaseFilename"</span>: <span class="string">""</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"version"</span>: <span class="number">3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>具体路径改成自己的clang的安装路径</p>
+<h3 id="launch-json"><a href="#launch-json" class="headerlink" title="launch.json"></a>launch.json</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">// https://github.com/Microsoft/vscode-cpptools/blob/master/launch.md</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"version"</span>: <span class="string">"0.2.0"</span>,</span><br><span class="line">    <span class="attr">"configurations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            "name": "(gdb) Launch", // 配置名称，将会在启动配置的下拉菜单中显示</span><br><span class="line">            "type": "cppdbg", // 配置类型，这里只能为cppdbg</span><br><span class="line">            "request": "launch", // 请求配置类型，可以为launch（启动）或attach（附加）</span><br><span class="line">            "program": "$&#123;fileDirname&#125;/$&#123;fileBasenameNoExtension&#125;.exe", // 将要进行调试的程序的路径</span><br><span class="line">            "args": [], // 程序调试时传递给程序的命令行参数，一般设为空即可</span><br><span class="line">            "stopAtEntry": true, // 设为true时程序将暂停在程序入口处，我一般设置为true</span><br><span class="line">            "cwd": "$&#123;workspaceFolder&#125;", // 调试程序时的工作目录</span><br><span class="line">            "environment": [], // （环境变量？）</span><br><span class="line">            "externalConsole": true, // 调试时是否显示控制台窗口，一般设置为true显示控制台</span><br><span class="line">            "internalConsoleOptions": "neverOpen", // 如果不设为neverOpen，调试时会跳到“调试控制台”选项卡，你应该不需要对gdb手动输命令吧？</span><br><span class="line">            "MIMode": "gdb", // 指定连接的调试器，可以为gdb或lldb。但目前lldb在windows下没有预编译好的版本。</span><br><span class="line">            "miDebuggerPath": "gdb.exe", // 调试器路径。</span><br><span class="line">            "setupCommands": [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"description"</span>: <span class="string">"Enable pretty-printing for gdb"</span>,</span><br><span class="line">                    <span class="attr">"text"</span>: <span class="string">"-enable-pretty-printing"</span>,</span><br><span class="line">                    <span class="attr">"ignoreFailures"</span>: <span class="literal">false</span></span><br><span class="line">                &#125;</span><br><span class="line">            ],</span><br><span class="line">            "preLaunchTask": "Compile" // 调试会话开始前执行的任务，一般为编译程序。与tasks.json的label相对应</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="tasks-json"><a href="#tasks-json" class="headerlink" title="tasks.json"></a>tasks.json</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">// https://github.com/Microsoft/vscode-cpptools/blob/master/launch.md</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"version"</span>: <span class="string">"0.2.0"</span>,</span><br><span class="line">    <span class="attr">"configurations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            "name": "(gdb) Launch", // 配置名称，将会在启动配置的下拉菜单中显示</span><br><span class="line">            "type": "cppdbg", // 配置类型，这里只能为cppdbg</span><br><span class="line">            "request": "launch", // 请求配置类型，可以为launch（启动）或attach（附加）</span><br><span class="line">            "program": "$&#123;fileDirname&#125;/$&#123;fileBasenameNoExtension&#125;.exe", // 将要进行调试的程序的路径</span><br><span class="line">            "args": [], // 程序调试时传递给程序的命令行参数，一般设为空即可</span><br><span class="line">            "stopAtEntry": true, // 设为true时程序将暂停在程序入口处，我一般设置为true</span><br><span class="line">            "cwd": "$&#123;workspaceFolder&#125;", // 调试程序时的工作目录</span><br><span class="line">            "environment": [], // （环境变量？）</span><br><span class="line">            "externalConsole": true, // 调试时是否显示控制台窗口，一般设置为true显示控制台</span><br><span class="line">            "internalConsoleOptions": "neverOpen", // 如果不设为neverOpen，调试时会跳到“调试控制台”选项卡，你应该不需要对gdb手动输命令吧？</span><br><span class="line">            "MIMode": "gdb", // 指定连接的调试器，可以为gdb或lldb。但目前lldb在windows下没有预编译好的版本。</span><br><span class="line">            "miDebuggerPath": "gdb.exe", // 调试器路径。</span><br><span class="line">            "setupCommands": [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"description"</span>: <span class="string">"Enable pretty-printing for gdb"</span>,</span><br><span class="line">                    <span class="attr">"text"</span>: <span class="string">"-enable-pretty-printing"</span>,</span><br><span class="line">                    <span class="attr">"ignoreFailures"</span>: <span class="literal">false</span></span><br><span class="line">                &#125;</span><br><span class="line">            ],</span><br><span class="line">            "preLaunchTask": "Compile" // 调试会话开始前执行的任务，一般为编译程序。与tasks.json的label相对应</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="其他设置-seting"><a href="#其他设置-seting" class="headerlink" title="其他设置 seting"></a>其他设置 seting</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">"editor.fontFamily": "Consolas, 微软雅黑", // 控制编辑器字体</span><br><span class="line">"workbench.colorTheme": "One Dark Pro", // 主题</span><br><span class="line">"files.trimTrailingWhitespace": true, // 保存时，删除每一行末尾的空格</span><br><span class="line">"workbench.colorCustomizations": &#123;</span><br><span class="line">        "activityBar.foreground": "#33ff66" // 自定义颜色</span><br><span class="line">    &#125;,</span><br><span class="line">"git.enabled": false, // 如果你不用git，我建议你关闭它</span><br><span class="line">"editor.minimap.enabled": false, // 我个人不用minimap，就是右边那个东西</span><br><span class="line">"editor.dragAndDrop": false, // 选中文字后，可以拖动它们调整位置。我是不需要</span><br><span class="line">"files.autoGuessEncoding": true // 启用后，会在打开文件时尝试猜测字符集编码</span><br></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>详情请参考 <a href="https://www.zhihu.com/question/30315894" target="_blank" rel="noopener">https://www.zhihu.com/question/30315894</a></p>
+</blockquote>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://axss.gitee.io/2018/03/12/技术/2018-03-14-vscode配置c,c++环境/" title="vscode配置c,c++环境" target="_blank" rel="external">http://axss.gitee.io/2018/03/12/技术/2018-03-14-vscode配置c,c++环境/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/GuoXingGitHub" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/GuoXingGitHub" target="_blank"><span class="text-dark">阿兴</span><small class="ml-1x">程序开发</small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+       
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNDY2OC8xMTIwNQ==">
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+      
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/03/12/技术/2018-03-10-csharp代码的编译过程/" title="C#代码的编译过程"><i class="icon icon-angle-left" aria-hidden="true"></i>&nbsp;&nbsp;上一篇</a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/03/12/技术/2018-03-10-最全的前端资源教程/" title="最全的前端资源教程">下一篇&nbsp;&nbsp;<i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning hidden-xs" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="wechat,qq,qzone"></div>
+    
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-tit">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="donate-payimg">
+            <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+          </div>
+          <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+          <div class="donate-payselect">
+            <div class="pay_item checked" data-id="alipay" data-src="/images/donate/alipayimg.png">
+              <div class="radio">
+                <input type="radio" name="payment" id="input-alipay" value="alipay" checked>
+                <label class="pay_logo clickable" for="input-alipay"><img src="/images/donate/alipay.jpg" alt="支付宝" /></label>
+              </div>
+            </div>
+            <div class="pay_item" data-id="weipay" data-src="/images/donate/weipayimg.png">
+              <div class="radio">
+                <input type="radio" name="payment" id="input-weipay" value="weipay">
+                <label class="pay_logo clickable" for="input-weipay"><img src="/images/donate/weipay.jpg" alt="微信支付" /></label>
+              </div>
+            </div>
+          </div>
+          <div class="text-grey">
+            <p>扫一扫，即可进行扫码打赏哦</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/GuoXingGitHub" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+  
+    
+    
+    
+        <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+    
+    
+    
+        
+<script defer src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+        
+    
+<script defer type="text/javascript">
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+
+    if (typeof LivereTower === 'function') { return; }
+
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+
+    
+    
+
+
+
+</body>
+</html>
